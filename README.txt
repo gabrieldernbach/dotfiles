@@ -1,2 +1,4 @@
-For keeping dotfiles under version control it is advisable to only link those to the user directory ~/
-As an example use 'ln -s ~/git/dotfiles/.vimrc ~/.vimrc
+It is advisable to create links in the home directory pointing to the dotfiles inside the version controled foler.
+This ensures that the files can be read in ~/ and are still managed and up to date.
+
+As an example use 'ln -s ~/git/dotfiles/.vimrc ~/.vimrc' to create link in the home directory pointing to the git folder file.
