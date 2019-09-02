@@ -10,15 +10,17 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
 
-"code folding for python, use 'za'
-Plugin 'https://github.com/tmhedberg/SimpylFold'
-"python code completion and go to definition:
-Plugin 'Valloric/YouCompleteMe' "heavy completion tool, compiled install!
-"Plugin 'vim-syntastic/syntastic' "check syntax on safe
-"Plugin 'nvie/vim-flake8' "check pep8 conformit
-Plugin 'tpope/vim-fugitive' "command git inside vim
-Plugin 'vim-syntastic/syntastic' "syntax check
+"Plugin 'davidhalter/jedi-vim'
 
+"code folding for python, use 'za'
+"Plugin 'https://github.com/tmhedberg/SimpylFold'
+"python code completion and go to definition:
+"Plugin 'Valloric/YouCompleteMe' "heavy completion tool, compiled install!
+"Plugin 'tpope/vim-fugitive' "command git inside vim
+"Plugin 'vim-syntastic/syntastic' "syntax check
+"Plugin 'https://github.com/tpope/vim-unimpaired' "add some shortcuts as [<space> or [q to jump to next error
+
+"Plugin 'https://github.com/lervag/vimtex' "latex shortcuts
 
 "SYNTAX Tutorial
 " plugin on GitHub repo
@@ -43,8 +45,9 @@ set backspace=2 "make backspace delete indentations etc.
 set cursorline "highlight line of curosor
 set showmatch "highlight matching paranthesis
 set wildmenu "autocompletion in command line will be shown as tags
+set wildmode=list:longest,full
 set incsearch "search as characters are entered
-set hlsearch "highlight search terms in text
+"set hlsearch "highlight search terms in text
 
 "Enable folding:
 set foldmethod=indent
@@ -82,6 +85,10 @@ map <c-l> <c-w>l
 vnoremap < <gv 
 vnoremap > >gv
 
+"extend j k to work inside wrapped lines
+map j gj
+map k gk
+
 "make shortcuts for text mode, movement and deletion
 :imap <C-h> <C-o>h
 :imap <C-j> <C-o>j
@@ -89,15 +96,23 @@ vnoremap > >gv
 :imap <C-l> <C-o>l
 :imap <C-x> <C-o>x
 :imap <C-u> <C-o>u
+:imap <C-e> <C-o>$
+:imap <C-a> <C-o>0
 
 "shortcut to save a file
 noremap <Leader>s :update<CR>
-"shortcut to run a file in python
-noremap <Leader>f :!clear; ipython %<CR>
-"shortcut for breakpoint
-noremap <Leader>b Oimport ipdb; ipdb.set_trace()<Esc>
-"print selection "not correctly working yet!
-noremap <Leader>p cprint()<Esc>hp
+
+"au BufNewFile,BufRead *.py
+    "shortcut to run a file in python
+au filetype python noremap <Leader>f :!clear; ipython %<CR>
+    "shortcut for breakpoint
+au filetype python noremap <Leader>b Oimport ipdb; ipdb.set_trace()<Esc>
+    "print selection "not correctly working yet!
+
+au filetype tex noremap <Leader>f :!clear; pdflatex %; open %:r.pdf<CR>
+"au BufNewFile,BufRead *.tex set tw=120
+
+au filetype cpp nnoremap <Leader>f :!g++ -I ./ -std=c++11 % -Wall -g -o %.out && ./%.out<CR>
 
 
 au BufNewFile,BufRead *.py "only when working on .py files
@@ -109,15 +124,18 @@ au BufNewFile,BufRead *.py "only when working on .py files
     \ set autoindent |
     \ set fileformat=unix
 	"set nowrap  "do not automatically wrap
-	"set tw=79   "width of document (used by gd)
+	"set tw=79   "width of document 
 	"set fo-=t   "automatically wrap text when typing 
 	"set colorcolumn=80 "adds a bar to the end of line
 
-"jump to function definition also outisde current buffer
-let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+"configure Explorer:
+let g:netrw_banner = 0 " hide banner, (show by I)
+let g:netrw_browse_split = 3 " open file in new tab
+let g:netrw_preview = 1 " show previews (p) vertical split
 
 "tips and tricks:
+
 "select whole paragraph with vip (visual, inside paragraph)
 "switch the ending of visual selection the cursor lives with o
 "make a mapping for breakpoints and for running commands
@@ -129,3 +147,12 @@ map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 ":ls view open buffers, :b num will open the respective number
 ":helptags ALL reload help of installed plugins
 "activate your virtual environment before launching vim
+
+"generate tags for current project by:
+"!ctags -R *.py
+
+"generate tags for all libraries installed:
+"!ctags -R --fields=+l --languages=python --python-kinds=-iv -f ./tags $(python -c 'import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))')
+
+"jump to tag by <C-]> or if multiple possible g-<c-]>, go back by <C-t>
+
