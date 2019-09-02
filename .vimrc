@@ -66,6 +66,7 @@ set splitright " default split to open on the right side
 
 set history=700
 set undolevels=700 " increase undos possible by u, redo by ctrl+r
+set noswapfile " mostly annoying and I have git
 
 let mapleader=',' "make a map leader key ','
 
