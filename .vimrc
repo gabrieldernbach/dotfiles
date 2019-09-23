@@ -21,8 +21,9 @@ Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
 "Plugin 'https://github.com/tpope/vim-unimpaired' "add some shortcuts as [<space> or [q to jump to next error
 
 "Plugin 'https://github.com/lervag/vimtex' "latex shortcuts
+Plugin 'https://github.com/tpope/vim-commentary' "visual select and gc for comment/uncomment code
 
-"SYNTAX Tutorial
+"TUTORIAL Use the following SYNTAX:
 " plugin on GitHub repo
 "Plugin 'tpope/vim-fugitive' "command git inside vim
 " plugin from http://vim-scripts.org/vim/scripts.html
@@ -30,8 +31,8 @@ Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
 " Git plugin not hosted on GitHub
 "Plugin 'git://git.wincent.com/command-t.git' "fast file fuzzy search
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+call vundle#end()            " required by Vundle
+filetype plugin indent on    " required by Vundle
 
 
 syntax on "let vim highligh syntax
@@ -108,13 +109,16 @@ noremap <Leader>s :update<CR>
 au filetype python noremap <Leader>f :!clear; ipython %<CR>
     "shortcut for breakpoint
 au filetype python noremap <Leader>b Oimport ipdb; ipdb.set_trace()<Esc>
-    "print selection "not correctly working yet!
+    "extended python highlighting
+au filetype python let python_highlight_all=1
+
 
 au filetype tex noremap <Leader>f :!clear; pdflatex %; open %:r.pdf<CR>
 "au BufNewFile,BufRead *.tex set tw=120
 
 au filetype cpp nnoremap <Leader>f :!g++ -I ./ -std=c++11 % -Wall -g -o %.out && ./%.out<CR>
 
+noremap <Leader>c :s/^/# /<CR>
 
 au BufNewFile,BufRead *.py "only when working on .py files
     \ set tabstop=4 |
@@ -123,7 +127,8 @@ au BufNewFile,BufRead *.py "only when working on .py files
     \ set textwidth=79 |
     \ set expandtab |
     \ set autoindent |
-    \ set fileformat=unix
+    \ set fileformat=unix |
+
 	"set nowrap  "do not automatically wrap
 	"set tw=79   "width of document 
 	"set fo-=t   "automatically wrap text when typing 
@@ -132,7 +137,7 @@ au BufNewFile,BufRead *.py "only when working on .py files
 
 "configure Explorer:
 let g:netrw_banner = 0 " hide banner, (show by I)
-let g:netrw_browse_split = 3 " open file in new tab
+"let g:netrw_browse_split = 3 " open file in new tab
 let g:netrw_preview = 1 " show previews (p) vertical split
 
 "tips and tricks:

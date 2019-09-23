@@ -7,9 +7,8 @@ alias ls='ls -GFh'
 
 alias cluster="ssh gdernbach@cluster.ml.tu-berlin.de"
 
+export PATH=/usr/local/bin:$PATH
 
 # trash() { mv "$@" ~/.Trash/; && echo "deleted $@" } # safer way of deletion
-
 trash() { for item in "$@" ; do echo "Trashing: $item" ; mv "$item" ~/.Trash/; done; }
 
-export PATH=/usr/local/bin:$PATH
