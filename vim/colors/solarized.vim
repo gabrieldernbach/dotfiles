@@ -1090,6 +1090,27 @@ endfunction
 autocmd ColorScheme * if g:colors_name != "solarized" | silent! aunmenu Solarized | else | call SolarizedMenu() | endif
 
 "}}}
+" Neovim Tree-sitter markup groups "{{{
+if has('nvim')
+    hi! link @markup.heading Title
+    hi! link @markup.heading.1 Title
+    hi! link @markup.heading.2 Title
+    hi! link @markup.heading.3 Title
+    hi! link @markup.heading.4 Title
+    hi! link @markup.heading.5 Title
+    hi! link @markup.heading.6 Title
+    hi! link @markup.list Identifier
+    hi! link @markup.raw String
+    hi! link @markup.raw.block String
+    hi! link @markup.link Underlined
+    hi! link @markup.link.url Underlined
+    hi! link @markup.link.label Underlined
+    hi! link @markup.quote Comment
+    hi! link @markup.strong Statement
+    hi! link @markup.italic Comment
+    hi! link @markup.strikethrough Comment
+endif
+"}}}
 " License "{{{
 " ---------------------------------------------------------------------
 "
