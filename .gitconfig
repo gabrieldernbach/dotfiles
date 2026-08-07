@@ -1,0 +1,35 @@
+# Keep personal identity and signing settings outside this shared file.
+# Set them per repository or in a private include.
+
+[core]
+    editor = nvim
+    autocrlf = input
+
+[color]
+    ui = auto
+
+[diff]
+    algorithm = histogram
+
+[fetch]
+    prune = true
+
+[merge]
+    conflictstyle = zdiff3
+
+[pull]
+    ff = only
+
+[push]
+    autoSetupRemote = true
+
+[rerere]
+    enabled = true
+
+[alias]
+    co = checkout
+    sw = switch
+    br = branch
+    ci = commit
+    st = status --short --branch
+    lg = log --graph --decorate --oneline --all
