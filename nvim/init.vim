@@ -33,18 +33,13 @@ EOF_LUA
 " Use the macOS system clipboard for ordinary yank and paste operations.
 set clipboard=unnamedplus
 
-" Use the light Catppuccin Latte palette consistently with Ghostty and tmux.
+" Use the light Solarized Bright palette consistently with Ghostty, tmux, and Pi.
 set background=light
-set termguicolors
+" Solarized uses the terminal's ANSI palette for its cterm highlights.
+set notermguicolors
 filetype plugin indent on
 syntax enable
-lua << EOF_LUA
-require("catppuccin").setup({
-  flavour = "latte",
-  term_colors = false,
-})
-vim.cmd.colorscheme("catppuccin-latte")
-EOF_LUA
+colorscheme solarized-bright
 
 " Configure plugins with lazy.nvim.
 lua << EOF_LUA
