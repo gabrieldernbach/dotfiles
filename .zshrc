@@ -27,6 +27,8 @@ alias gs='git status --short --branch'
 alias gd='git diff'
 alias gco='git checkout'
 alias n='nvim'
+alias blocksleep-on='sudo pmset -a disablesleep 1'
+alias blocksleep-off='sudo pmset -a disablesleep 0'
 
 # Make Homebrew available in non-login interactive shells too.
 if (( ! $+commands[brew] )); then
