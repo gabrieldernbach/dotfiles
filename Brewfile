@@ -9,4 +9,4 @@ brew "shellcheck"
 brew "tmux"
 
 # GUI terminal for macOS.
-cask "ghostty"
+cask "ghostty" if OS.mac?

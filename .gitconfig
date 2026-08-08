@@ -1,5 +1,8 @@
 # Keep personal identity and signing settings outside this shared file.
-# Set them per repository or in a private include.
+# Set them per repository or in ~/.gitconfig.local.
+
+[include]
+    path = ~/.gitconfig.local
 
 [core]
     editor = nvim
