@@ -13,7 +13,18 @@ The leader key is remapped from the default `\\` to Space in `init.vim`. In the 
 | `<leader>fb` | List or switch buffers |
 | `<leader>bd` | Delete or close the current buffer |
 
-These examples use a common leader-key namespace; the corresponding commands are provided by the relevant plugins or mappings.
+These mappings are configured when the plugins below are available. `which-key.nvim` displays their descriptions as the key sequence is entered.
+
+## Plugins
+
+Plugins are managed with [lazy.nvim](https://github.com/folke/lazy.nvim), which bootstraps itself into Neovim's data directory on first startup:
+
+- [lazy.nvim](https://github.com/folke/lazy.nvim) manages plugin installation and loading.
+- [which-key.nvim](https://github.com/folke/which-key.nvim) shows available keybindings.
+- [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) provides file, text, and buffer pickers.
+- [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) provides Telescope's required dependency.
+
+Use `:Lazy` to inspect or update plugins. The `<leader>fg` live-grep mapping also requires [ripgrep](https://github.com/BurntSushi/ripgrep).
 
 ## Buffer navigation
 
