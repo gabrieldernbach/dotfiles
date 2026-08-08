@@ -1,16 +1,34 @@
 " Use Space as the leader key.
 let mapleader = " "
 
-" Load the shared vim-plug installation from ~/.vim.
+" Load the shared Vim runtime for colors and common autoloads.
 set runtimepath^=~/.vim
-if filereadable(expand("~/.vim/autoload/plug.vim"))
-  call plug#begin(stdpath("data") . "/plugged")
-  Plug 'folke/which-key.nvim'
-  " Telescope requires plenary.nvim.
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'nvim-telescope/telescope.nvim'
-  call plug#end()
-endif
+
+" Bootstrap lazy.nvim.
+lua << EOF_LUA
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "--branch=stable",
+    lazyrepo,
+    lazypath,
+  })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\\nPress any key to exit...", "WarningMsg" },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+EOF_LUA
 
 " Use the macOS system clipboard for ordinary yank and paste operations.
 set clipboard=unnamedplus
@@ -28,26 +46,35 @@ require("catppuccin").setup({
 vim.cmd.colorscheme("catppuccin-latte")
 EOF_LUA
 
-" Configure Telescope pickers and their leader-key groups.
+" Configure plugins with lazy.nvim.
 lua << EOF_LUA
-local telescope_ok, telescope = pcall(require, "telescope")
-if telescope_ok then
-  telescope.setup({})
-  local builtin = require("telescope.builtin")
-  vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
-  vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Grep text" })
-  vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "List buffers" })
-  vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer" })
-end
+require("lazy").setup({
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      spec = {
+        { "<leader>f", group = "find" },
+        { "<leader>b", group = "buffers" },
+      },
+    },
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {},
+    keys = {
+      { "<leader>ff", function() require("telescope.builtin").find_files() end, desc = "Find files" },
+      { "<leader>fg", function() require("telescope.builtin").live_grep() end, desc = "Grep text" },
+      { "<leader>fb", function() require("telescope.builtin").buffers() end, desc = "List buffers" },
+    },
+  },
+}, {
+  checker = { enabled = true },
+})
 
-local which_key_ok, which_key = pcall(require, "which-key")
-if which_key_ok then
-  which_key.setup({})
-  which_key.add({
-    { "<leader>f", group = "find" },
-    { "<leader>b", group = "buffers" },
-  })
-end
+vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer" })
 EOF_LUA
 
 " Navigate between buffers.
