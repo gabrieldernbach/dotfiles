@@ -8,6 +8,7 @@
   "doubleEscapeAction": "tree",
   "theme": "solarized-bright",
   "tuiMode": "fullscreen",
+  "externalEditor": "nvim",
   "packages": [
     "npm:pi-agent-browser-native",
     "npm:pi-web-access",
