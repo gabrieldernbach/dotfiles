@@ -17,3 +17,15 @@ EOF_LUA
 " Navigate between buffers.
 nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
+
+" Navigate the quickfix list.
+nnoremap <silent> [q :cprevious<CR>
+nnoremap <silent> ]q :cnext<CR>
+
+" Navigate the location list.
+nnoremap <silent> [l :lprevious<CR>
+nnoremap <silent> ]l :lnext<CR>
+
+" Navigate the tag stack.
+nnoremap <silent> [t :tprevious<CR>
+nnoremap <silent> ]t :tnext<CR>
