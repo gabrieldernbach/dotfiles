@@ -101,3 +101,101 @@ nnoremap <silent> ]l :lnext<CR>
 " Navigate the tag stack.
 nnoremap <silent> [t :tprevious<CR>
 nnoremap <silent> ]t :tnext<CR>
+
+" Use tree-style netrw with hjkl navigation.
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:netrw_winsize = 25
+
+" Return focus to the Lexplore window after opening a file.
+" Netrw calls g:Netrw_funcref before its browse command has fully returned;
+" defer the window switch until the command and related WinEnter events finish.
+function! NetrwFocusWindow(winid, timer) abort
+  if win_id2tabwin(a:winid)[0] == tabpagenr()
+    call win_gotoid(a:winid)
+  endif
+endfunction
+
+function! NetrwReturnToLexplore() abort
+  let l:lexbuf = gettabvar(tabpagenr(), 'netrw_lexbufnr', -1)
+  if l:lexbuf <= 0
+    return
+  endif
+
+  let l:lexwin = bufwinid(l:lexbuf)
+  if l:lexwin > 0
+    " Switch immediately, then repeat after Netrw's command finishes.
+    call win_gotoid(l:lexwin)
+    call timer_start(0, function('NetrwFocusWindow', [l:lexwin]))
+  endif
+endfunction
+
+" Find the file window targeted by Lexplore.
+function! NetrwLexploreFileWindow() abort
+  let l:lexbuf = gettabvar(tabpagenr(), 'netrw_lexbufnr', -1)
+  if l:lexbuf <= 0
+    return 0
+  endif
+
+  let l:lexwin = bufwinid(l:lexbuf)
+  if l:lexwin <= 0
+    return 0
+  endif
+
+  " Prefer Netrw's native preview window when one is open.
+  for l:info in getwininfo()
+    if l:info.tabnr == tabpagenr()
+          \ && l:info.winid != l:lexwin
+          \ && getwinvar(l:info.winid, '&previewwindow')
+      return l:info.winid
+    endif
+  endfor
+
+  let l:chgwin = get(g:, 'netrw_chgwin', -1)
+  if l:chgwin > 0 && l:chgwin <= winnr('$')
+    let l:target = win_getid(l:chgwin, tabpagenr())
+    if l:target > 0 && l:target != l:lexwin
+      return l:target
+    endif
+  endif
+
+  for l:info in getwininfo()
+    if l:info.tabnr == tabpagenr()
+          \ && l:info.winid != l:lexwin
+          \ && getbufvar(l:info.bufnr, '&filetype') !=# 'netrw'
+      return l:info.winid
+    endif
+  endfor
+
+  return 0
+endfunction
+
+" Scroll the file shown beside Lexplore without leaving the explorer focused.
+function! NetrwScrollLexplore(direction) abort
+  let l:browser = win_getid()
+  let l:key = a:direction > 0 ? "\<C-f>" : "\<C-b>"
+  let l:target = NetrwLexploreFileWindow()
+
+  if l:target <= 0
+    execute 'normal! ' . l:key
+    return
+  endif
+
+  call win_execute(l:target, 'normal! ' . l:key)
+  call win_gotoid(l:browser)
+endfunction
+
+function! NetrwSetupMaps() abort
+  " <Plug> mappings keep Netrw's own directory handling intact.
+  nmap <silent> <buffer> l <Plug>NetrwLocalBrowseCheck
+  nmap <silent> <buffer> h <Plug>NetrwTreeSqueeze
+  nnoremap <silent> <buffer> <PageUp> :call NetrwScrollLexplore(-1)<CR>
+  nnoremap <silent> <buffer> <PageDown> :call NetrwScrollLexplore(1)<CR>
+endfunction
+
+augroup netrw_hjkl_focus
+  autocmd!
+  autocmd FileType netrw call NetrwSetupMaps()
+augroup END
+
+let g:Netrw_funcref = function('NetrwReturnToLexplore')
