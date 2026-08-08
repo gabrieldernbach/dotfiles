@@ -17,6 +17,7 @@ Personal macOS/Linux configuration for a consistent **Solarized Bright** setup a
 | `vimrc` | Vim clipboard configuration. |
 | `vim/colors/` | Shared Solarized colorschemes for Vim and Neovim, including Neovim Tree-sitter markup colors. |
 | `pi/settings.json` | Persistent global Pi settings, including fullscreen transcript scrolling. |
+| `pi/AGENTS.md` | Global Pi workflow instructions. |
 | `pi/themes/solarized-bright.json` | Optional pi interactive theme. |
 
 ## Installation
