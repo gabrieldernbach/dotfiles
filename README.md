@@ -7,6 +7,10 @@ Personal macOS/Linux configuration for a consistent **Solarized Bright** setup a
 | Path | Purpose |
 | --- | --- |
 | `install.sh` | OS-aware, idempotent installer with backups for conflicting targets. |
+| `Brewfile` | Optional Homebrew formulas and macOS casks used by the setup. |
+| `.zprofile` | Login-shell environment and Homebrew initialization. |
+| `.zshrc` | Interactive zsh history, completion, aliases, and tool hooks. |
+| `.gitconfig` | Shared Git defaults and aliases; personal identity stays local. |
 | `ghostty/config.ghostty` | Ghostty palette, background, foreground, cursor, and selection colors. |
 | `tmux.conf` | Modal navigation, mouse support, pane/window styling, and Solarized Bright status colors. |
 | `nvim/init.vim` | Neovim clipboard integration, shared Vim runtime, filetype support, and colorscheme setup. |
@@ -24,10 +28,30 @@ cd ~/.dotfiles
 ./install.sh
 ```
 
-Restart applications after installation. Reload an active tmux configuration with:
+The installer activates the shell and Git symlinks but does not install packages. If Homebrew is available, install the optional dependencies separately:
+
+```sh
+brew bundle --file ./Brewfile
+```
+
+Ghostty is included by the Brewfile only on macOS. Restart applications after installation. Reload an active tmux configuration with:
 
 ```sh
 tmux source-file ~/.tmux.conf
+```
+
+### Personal Git identity
+
+Identity and signing settings are intentionally not tracked. Add them to the untracked file `~/.gitconfig.local`, which is included automatically:
+
+```ini
+[user]
+    name = Your Name
+    email = you@example.com
+    # signingkey = ...
+
+[commit]
+    # gpgSign = true
 ```
 
 ## tmux controls
