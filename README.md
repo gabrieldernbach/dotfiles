@@ -16,6 +16,7 @@ Personal macOS/Linux configuration for a consistent **Solarized Bright** setup a
 | `nvim/init.vim` | Neovim clipboard integration, shared Vim runtime, filetype support, and colorscheme setup. |
 | `vimrc` | Vim clipboard configuration. |
 | `vim/colors/` | Shared Solarized colorschemes for Vim and Neovim, including Neovim Tree-sitter markup colors. |
+| `pi/settings.json` | Persistent global Pi settings, including fullscreen transcript scrolling. |
 | `pi/themes/solarized-bright.json` | Optional pi interactive theme. |
 
 ## Installation
@@ -34,7 +35,7 @@ The installer activates the shell and Git symlinks but does not install packages
 brew bundle --file ./Brewfile
 ```
 
-Ghostty is included by the Brewfile only on macOS. Restart applications after installation. Reload an active tmux configuration with:
+Ghostty is included by the Brewfile only on macOS. Restart applications (including pi) after installation. Reload an active tmux configuration with:
 
 ```sh
 tmux source-file ~/.tmux.conf

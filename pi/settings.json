@@ -1,0 +1,19 @@
+{
+  "lastChangelogVersion": "0.84.1",
+  "defaultThinkingLevel": "max",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-luna",
+  "followUpMode": "one-at-a-time",
+  "editorPaddingX": 2,
+  "doubleEscapeAction": "tree",
+  "theme": "solarized-bright",
+  "tuiMode": "fullscreen",
+  "packages": [
+    "npm:pi-agent-browser-native",
+    "npm:pi-web-access",
+    "npm:pi-agents",
+    "npm:pi-subagents"
+  ],
+  "defaultProjectTrust": "ask",
+  "steeringMode": "one-at-a-time"
+}
