@@ -56,6 +56,7 @@ require("lazy").setup({
       spec = {
         { "<leader>f", group = "find" },
         { "<leader>b", group = "buffers" },
+        { "<leader>m", group = "markdown" },
       },
     },
   },
@@ -70,11 +71,19 @@ require("lazy").setup({
       { "<leader>fb", function() require("telescope.builtin").buffers() end, desc = "List buffers" },
     },
   },
+  {
+    "OXY2DEV/markview.nvim",
+    lazy = false,
+    opts = {},
+  },
 }, {
   checker = { enabled = true },
 })
 
 vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer" })
+vim.keymap.set("n", "<leader>mt", "<cmd>Markview toggle<CR>", { desc = "Toggle Markdown rendering" })
+vim.keymap.set("n", "<leader>mh", "<cmd>Markview hybridToggle<CR>", { desc = "Toggle hybrid Markdown editing" })
+vim.keymap.set("n", "<leader>ms", "<cmd>Markview splitToggle<CR>", { desc = "Toggle Markdown split preview" })
 EOF_LUA
 
 " Navigate between buffers.
