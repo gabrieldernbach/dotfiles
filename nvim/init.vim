@@ -13,3 +13,7 @@ require("catppuccin").setup({
 })
 vim.cmd.colorscheme("catppuccin-latte")
 EOF_LUA
+
+" Navigate between buffers.
+nnoremap <silent> [b :bprevious<CR>
+nnoremap <silent> ]b :bnext<CR>
