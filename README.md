@@ -17,6 +17,7 @@ Personal macOS/Linux configuration for a consistent **Solarized Bright** setup a
 | `vimrc` | Vim clipboard configuration. |
 | `vim/colors/` | Shared Solarized colorschemes for Vim and Neovim, including Neovim Tree-sitter markup colors. |
 | `pi/settings.json` | Persistent global Pi settings, including fullscreen transcript scrolling. |
+| `pi/models.json` | OpenAI-compatible local model providers, including MLX LFM2.5-2.6B. |
 | `pi/AGENTS.md` | Global Pi workflow instructions. |
 | `pi/themes/solarized-bright.json` | Optional pi interactive theme. |
 
@@ -36,7 +37,9 @@ The installer activates the shell and Git symlinks but does not install packages
 brew bundle --file ./Brewfile
 ```
 
-Ghostty is included by the Brewfile only on macOS. Restart applications (including pi) after installation. Reload an active tmux configuration with:
+Ghostty is included by the Brewfile only on macOS. Restart applications (including pi) after installation. For the local LFM2.5 MLX server, install `mlx-lm` with `uv tool install mlx-lm`, then use `pi-lfm` to start the server on demand, launch Pi with the model selected, and stop the server when Pi exits. `lfm-start` and `lfm-stop` manage the server manually without launching Pi.
+
+Reload an active tmux configuration with:
 
 ```sh
 tmux source-file ~/.tmux.conf

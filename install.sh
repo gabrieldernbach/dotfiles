@@ -99,6 +99,7 @@ required_sources=(
     "$DOTFILES_DIR/nvim/init.vim"
     "$DOTFILES_DIR/ghostty/config.ghostty"
     "$DOTFILES_DIR/pi/settings.json"
+    "$DOTFILES_DIR/pi/models.json"
     "$DOTFILES_DIR/pi/AGENTS.md"
 )
 for source in "${required_sources[@]}"; do
@@ -154,6 +155,7 @@ link_file "$DOTFILES_DIR/nvim/init.vim" "$CONFIG_DIR/nvim/init.vim"
 link_optional "$DOTFILES_DIR/nvim/pack" "$CONFIG_DIR/nvim/pack"
 link_file "$DOTFILES_DIR/ghostty/config.ghostty" "$ghostty_target"
 link_file "$DOTFILES_DIR/pi/settings.json" "$HOME_DIR/.pi/agent/settings.json"
+link_file "$DOTFILES_DIR/pi/models.json" "$HOME_DIR/.pi/agent/models.json"
 link_file "$DOTFILES_DIR/pi/AGENTS.md" "$HOME_DIR/.pi/agent/AGENTS.md"
 link_optional "$DOTFILES_DIR/pi/themes/solarized-bright.json" \
     "$HOME_DIR/.pi/agent/themes/solarized-bright.json"

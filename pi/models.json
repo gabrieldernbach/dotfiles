@@ -1,0 +1,15 @@
+{
+  "providers": {
+    "mlx-lm": {
+      "baseUrl": "http://localhost:8080/v1",
+      "api": "openai-completions",
+      "apiKey": "none",
+      "models": [
+        {
+          "id": "LiquidAI/LFM2.5-2.6B-MLX-4bit",
+          "name": "LFM2.5-2.6B"
+        }
+      ]
+    }
+  }
+}
