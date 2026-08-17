@@ -106,29 +106,52 @@ let g:netrw_winsize = 25
 lua << EOF_LUA
 local default_open = vim.ui.open
 
+local function notify_tmux_error(result)
+  local message = vim.trim(result.stderr or result.stdout or "")
+  if message == "" then
+    message = "tmux command failed with exit code " .. result.code
+  end
+  vim.schedule(function()
+    vim.notify("Unable to open tdf: " .. message, vim.log.levels.ERROR)
+  end)
+end
+
+local function open_tdf(path)
+  if vim.fn.executable("tdf") == 0 then
+    vim.notify("tdf is not installed or not on PATH", vim.log.levels.ERROR)
+    return
+  end
+
+  if vim.env.TMUX and vim.fn.executable("tmux") == 1 then
+    local cwd = vim.fn.fnamemodify(path, ":h")
+    local command = "exec tdf " .. vim.fn.shellescape(path)
+
+    -- Run tdf in a real tmux window. A nested Nvim terminal cannot reliably
+    -- forward the Kitty graphics sequences used to draw the PDF.
+    vim.system({ "tmux", "set-option", "-g", "allow-passthrough", "on" },
+      { text = true }, function(result)
+        if result.code ~= 0 then
+          notify_tmux_error(result)
+          return
+        end
+
+        vim.system({ "tmux", "new-window", "-c", cwd, "--", command },
+          { text = true }, function(window_result)
+            if window_result.code ~= 0 then
+              notify_tmux_error(window_result)
+            end
+          end)
+      end)
+    return
+  end
+
+  -- Outside tmux, use the attached terminal rather than a nested terminal buffer.
+  vim.cmd("!tdf " .. vim.fn.shellescape(path))
+end
+
 vim.ui.open = function(path, opts)
   if path:lower():match("%.pdf$") then
-    if vim.fn.executable("tdf") == 0 then
-      vim.notify("tdf is not installed or not on PATH", vim.log.levels.ERROR)
-      return true
-    end
-
-    vim.cmd("botright new")
-    local win = vim.api.nvim_get_current_win()
-    local buf = vim.api.nvim_get_current_buf()
-
-    vim.fn.termopen({ "tdf", path }, {
-      on_exit = function()
-        vim.schedule(function()
-          if vim.api.nvim_win_is_valid(win) then
-            vim.api.nvim_win_close(win, true)
-          elseif vim.api.nvim_buf_is_valid(buf) then
-            vim.api.nvim_buf_delete(buf, { force = true })
-          end
-        end)
-      end,
-    })
-    vim.cmd("startinsert")
+    open_tdf(path)
     return true
   end
 
