@@ -102,6 +102,40 @@ let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 let g:netrw_winsize = 25
 
+" Open PDFs selected in netrw with tdf instead of reading their bytes in Nvim.
+lua << EOF_LUA
+local default_open = vim.ui.open
+
+vim.ui.open = function(path, opts)
+  if path:lower():match("%.pdf$") then
+    if vim.fn.executable("tdf") == 0 then
+      vim.notify("tdf is not installed or not on PATH", vim.log.levels.ERROR)
+      return true
+    end
+
+    vim.cmd("botright new")
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_get_current_buf()
+
+    vim.fn.termopen({ "tdf", path }, {
+      on_exit = function()
+        vim.schedule(function()
+          if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_win_close(win, true)
+          elseif vim.api.nvim_buf_is_valid(buf) then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end)
+      end,
+    })
+    vim.cmd("startinsert")
+    return true
+  end
+
+  return default_open(path, opts)
+end
+EOF_LUA
+
 " Return focus to the Lexplore window after opening a file.
 " Netrw calls g:Netrw_funcref before its browse command has fully returned;
 " defer the window switch until the command and related WinEnter events finish.
@@ -180,10 +214,24 @@ function! NetrwScrollLexplore(direction) abort
   call win_gotoid(l:browser)
 endfunction
 
+function! NetrwOpenPdfOrFile() abort
+  " Strip a possible symlink target before checking the selected entry.
+  let l:entry = substitute(getline('.'), '\s\+-->.*$', '', '')
+
+  if l:entry =~? '\.pdf\%([*@]\)\=\s*$' && l:entry !~# '/\s*$'
+    " Netrw's x mapping resolves the full path, including spaces and tree entries.
+    execute "normal x"
+  else
+    " Preserve Netrw's normal directory/file behavior for everything else.
+    execute "normal \<Plug>NetrwLocalBrowseCheck"
+  endif
+endfunction
+
 function! NetrwSetupMaps() abort
   " <Plug> mappings keep Netrw's own directory handling intact.
   nmap <silent> <buffer> l <Plug>NetrwLocalBrowseCheck
   nmap <silent> <buffer> h <Plug>NetrwTreeSqueeze
+  nnoremap <silent> <buffer> <CR> :call NetrwOpenPdfOrFile()<CR>
   nnoremap <silent> <buffer> <PageUp> :call NetrwScrollLexplore(-1)<CR>
   nnoremap <silent> <buffer> <PageDown> :call NetrwScrollLexplore(1)<CR>
 endfunction
