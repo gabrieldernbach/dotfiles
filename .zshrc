@@ -119,6 +119,6 @@ if (( $+commands[direnv] )); then
     eval "$(direnv hook zsh)"
 fi
 
-if (( $+commands[fzf] )); then
-    eval "$(fzf --zsh)"
+if [[ -r "$HOME/.fzf.zsh" ]]; then
+    source "$HOME/.fzf.zsh"
 fi
