@@ -3,6 +3,7 @@
   "defaultThinkingLevel": "max",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.6-luna",
+  "enabledModels": ["gpt-5.6-luna", "gpt-5.6-sol"],
   "followUpMode": "one-at-a-time",
   "editorPaddingX": 2,
   "doubleEscapeAction": "tree",
